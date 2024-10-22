@@ -13,17 +13,49 @@
     <div class="action">
       <a target="_blank" rel="noreferrer" @click="ipcHandle">Send IPC</a>
     </div> -->
-    <div class="action">
-      <a style="color: #42d392;" onmouseout="this.style.color='#42d392';" target="_blank" rel="noreferrer" @click="">자동 경매올리고 포스팅</a>
-    </div>
 
+    <Button label="자동 경매올리고 포스팅" icon="pi pi-search" size="small" @click="" />
   </div>
+
+  <div class="pt-4">Text...</div>
+
   <Versions />
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
 import Versions from './components/Versions.vue'
 
+const enableAuction = ref(false);
+const updateProgress = ref();
+
+onMounted(async () => {
+  await waitForTimeout(1000);
+
+  // 1. 업데이트 확인
+  await checkUpdate();
+})
+
+const checkUpdate = async () => {
+  window.electron.ipcRenderer.send('checkUpdate');
+}
+
+/** 업데이트 관련 */
+window.electron.ipcRenderer.on('updateChecking', async (event, res) => {
+  console.log(res);
+  if (res.result) {
+    updateProgress.value = res.message;
+
+  } else {
+    updateProgress.value = res.message
+  }
+});
+
 const ipcHandle = () => window.electron.ipcRenderer.send('ping')
+
+// 지연시간 추가 setTimeOut 대체
+const waitForTimeout = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 </script>

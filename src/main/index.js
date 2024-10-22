@@ -4,9 +4,11 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon2.png?asset'
 
+let mainWindow = null;
+
 function createWindow() {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1000,
     height: 600,
     show: false,
@@ -60,6 +62,7 @@ app.whenReady().then(() => {
   ipcMain.on('checkUpdate', async (event, arg) => {
     try {
       console.log('checkUpdate');
+      autoUpdater.checkForUpdates(); // 업데이트 확인 시작, 개발 모드에서는 확인할 수 없음.
       
     } catch (error) {
       console.log(error);
@@ -67,6 +70,42 @@ app.whenReady().then(() => {
   });
 
   createWindow()
+
+  /** 업데이트 관련 */
+  autoUpdater.on("checking-for-update", () => {
+    const res = {
+      result: true,
+      message: "업데이트 확인 중.",
+    }
+    mainWindow.webContents.send("updateChecking", res);
+  });
+
+  autoUpdater.on("update-available", () => { // 업데이트 할 신규 버전이 있을 시 호출 됨
+    const res = {
+      result: true,
+      message: "신규 버전 확인 및 업데이트 가능.",
+    }
+    mainWindow.webContents.send("updateChecking", res);
+  });
+
+  autoUpdater.on("update-not-available", () => { // 업데이트 할 신규 버전이 없을 시 호출 됨
+    const res = {
+      result: false,
+      message: "신규 버전 없음.",
+    }
+    mainWindow.webContents.send("updateChecking", res);
+  });
+
+  autoUpdater.on("error", (err) => {
+    console.log(err);
+    const res = {
+      result: false,
+      message: "릴리즈가 없습니다.",
+    }
+    mainWindow.webContents.send("updateChecking", res);
+  });
+
+
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
