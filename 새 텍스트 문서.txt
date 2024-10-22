@@ -10,3 +10,9 @@ https://github.com/alex8088/electron-vite-boilerplate
 - git branch -M main
 - git remote add origin https://github.com/sh415/ace.helper2.git
 - git push -u origin main
+
+3. 자동 업데이트 설정
+- 환경 변수 생성: GH_TOKEN = { your-github-token }
+
+4. package.json > script 에 명령줄 추가
+- "deploy:win": "npm run build && electron-builder --win --publish always"
