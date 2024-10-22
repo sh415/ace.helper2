@@ -14,10 +14,12 @@
       <a target="_blank" rel="noreferrer" @click="ipcHandle">Send IPC</a>
     </div> -->
 
-    <Button label="자동 경매올리고 포스팅" icon="pi pi-search" size="small" @click="" />
+    <Button v-if="enableAuction" icon="pi pi-cloud-upload" label="자동 경매올리고 포스팅" size="small" @click="" />
+    <Button v-else icon="pi pi-spin pi-spinner" label="자동 경매올리고 포스팅" size="small" @click="" disabled />
   </div>
 
-  <div class="pt-4">Text...</div>
+  <!-- <div class="pt-4">{{ updateProgress }}</div> -->
+  <div class="pt-4 text-sm">Text...</div>
 
   <Versions />
 </template>
@@ -43,12 +45,7 @@ const checkUpdate = async () => {
 /** 업데이트 관련 */
 window.electron.ipcRenderer.on('updateChecking', async (event, res) => {
   console.log(res);
-  if (res.result) {
-    updateProgress.value = res.message;
-
-  } else {
-    updateProgress.value = res.message
-  }
+  updateProgress.value = res.message;
 });
 
 const ipcHandle = () => window.electron.ipcRenderer.send('ping')

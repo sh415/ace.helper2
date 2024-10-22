@@ -91,12 +91,12 @@ app.whenReady().then(() => {
   autoUpdater.on("update-not-available", () => { // 업데이트 할 신규 버전이 없을 시 호출 됨
     const res = {
       result: false,
-      message: "신규 버전 없음.",
+      message: "최신 버전입니다.",
     }
     mainWindow.webContents.send("updateChecking", res);
   });
 
-  autoUpdater.on("error", (err) => {
+  autoUpdater.on("error", (err) => { // 업데이트 에러 발생시 호출
     console.log(err);
     const res = {
       result: false,
@@ -105,6 +105,22 @@ app.whenReady().then(() => {
     mainWindow.webContents.send("updateChecking", res);
   });
 
+  autoUpdater.on("download-progress", (progress) => {
+    const res = {
+      result: true,
+      message: progress.percent,
+    }
+    mainWindow.webContents.send("updateChecking", res);
+  });
+
+  autoUpdater.on("update-downloaded", (info) => { // 업데이트 설치 파일 다운로드 완료 시 업데이트 진행 여부 선택
+    const res = {
+      result: true,
+      message: "신규 버전 다운로드 완료."
+    }
+    mainWindow.webContents.send("updateChecking", res);
+    autoUpdater.quitAndInstall();
+  });
 
 
   app.on('activate', function () {
