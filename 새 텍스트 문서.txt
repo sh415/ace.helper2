@@ -11,6 +11,8 @@ https://github.com/alex8088/electron-vite-boilerplate
 - git remote add origin https://github.com/sh415/ace.helper2.git
 - git push -u origin main
 
+------------------------------------------------------------------------------------- 현재는 public 으로 릴리즈 한다.
+
 3. git 토큰 생성
 - 토큰권한 repo 체크
 

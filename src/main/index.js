@@ -100,7 +100,8 @@ app.whenReady().then(() => {
     console.log(err);
     const res = {
       result: false,
-      message: "릴리즈가 없습니다.",
+      message: "업데이트 오류",
+      err: err,
     }
     mainWindow.webContents.send("updateChecking", res);
   });
@@ -108,7 +109,7 @@ app.whenReady().then(() => {
   autoUpdater.on("download-progress", (progress) => {
     const res = {
       result: true,
-      message: progress.percent,
+      message: `다운로드 중... ${progress.percent.toFixed(1)}%`,
     }
     mainWindow.webContents.send("updateChecking", res);
   });

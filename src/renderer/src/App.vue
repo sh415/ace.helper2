@@ -18,8 +18,7 @@
     <Button v-else icon="pi pi-spin pi-spinner" label="자동 경매올리고 포스팅" size="small" @click="" disabled />
   </div>
 
-  <!-- <div class="pt-4">{{ updateProgress }}</div> -->
-  <div class="pt-4 text-sm">Text...</div>
+  <div class="pt-4 text-sm">{{ updateProgress }}</div>
 
   <Versions />
 </template>
