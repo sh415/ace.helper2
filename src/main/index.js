@@ -74,7 +74,7 @@ app.whenReady().then(() => {
   /** 업데이트 관련 */
   autoUpdater.on("checking-for-update", () => {
     const res = {
-      result: true,
+      result: 0,
       message: "업데이트 확인 중.",
     }
     mainWindow.webContents.send("updateChecking", res);
@@ -82,7 +82,7 @@ app.whenReady().then(() => {
 
   autoUpdater.on("update-available", () => { // 업데이트 할 신규 버전이 있을 시 호출 됨
     const res = {
-      result: true,
+      result: 1,
       message: "신규 버전 확인 및 업데이트 가능.",
     }
     mainWindow.webContents.send("updateChecking", res);
@@ -90,7 +90,7 @@ app.whenReady().then(() => {
 
   autoUpdater.on("update-not-available", () => { // 업데이트 할 신규 버전이 없을 시 호출 됨
     const res = {
-      result: false,
+      result: 2,
       message: "최신 버전입니다.",
     }
     mainWindow.webContents.send("updateChecking", res);
@@ -99,7 +99,7 @@ app.whenReady().then(() => {
   autoUpdater.on("error", (err) => { // 업데이트 에러 발생시 호출
     console.log(err);
     const res = {
-      result: false,
+      result: 3,
       message: "업데이트 오류",
       err: err,
     }
@@ -108,7 +108,7 @@ app.whenReady().then(() => {
 
   autoUpdater.on("download-progress", (progress) => {
     const res = {
-      result: true,
+      result: 4,
       message: `다운로드 중... ${progress.percent.toFixed(1)}%`,
     }
     mainWindow.webContents.send("updateChecking", res);
@@ -116,7 +116,7 @@ app.whenReady().then(() => {
 
   autoUpdater.on("update-downloaded", (info) => { // 업데이트 설치 파일 다운로드 완료 시 업데이트 진행 여부 선택
     const res = {
-      result: true,
+      result: 5,
       message: "신규 버전 다운로드 완료."
     }
     mainWindow.webContents.send("updateChecking", res);

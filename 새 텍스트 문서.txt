@@ -11,8 +11,6 @@ https://github.com/alex8088/electron-vite-boilerplate
 - git remote add origin https://github.com/sh415/ace.helper2.git
 - git push -u origin main
 
-------------------------------------------------------------------------------------- 현재는 public 으로 릴리즈 한다.
-
 3. git 토큰 생성
 - 토큰권한 repo 체크
 
@@ -23,4 +21,8 @@ https://github.com/alex8088/electron-vite-boilerplate
 
 6. 업데이트
 - 최신 Releases 를 체크하므로 draft 항목을 Publish releases 해야 함
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+현재는 public 으로 릴리즈 한다. 배포가지 가능하지만 업데이트시 token 정보가 어디에 위치하여야 하는지 파악해야 함.
 
