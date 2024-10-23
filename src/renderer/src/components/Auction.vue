@@ -2,25 +2,40 @@
   <div class="card flex justify-center">
     <Menu class="text-xs" :model="items" />
   </div>
+
+  <div class="flex-grow flex justify-center items-center">
+    <div v-if="menu === 0">
+      <SettingsNaver></SettingsNaver>
+    </div>
+  </div>
+
 </template>
   
 <script setup>
   import { ref, onMounted } from "vue";
+  import SettingsNaver from "./SettingsNaver.vue";
 
   // emit 정의
   const emit = defineEmits(['close']);
 
+  const menu = ref(0);
   const items = ref([
     {
       label: 'Settings',
       items: [
         {
           label: '네이버 계정 설정',
-          icon: 'pi pi-user'
+          icon: 'pi pi-user',
+          command: () => {
+            menu.value = 0;
+          }
         },
         {
           label: '옥션 계정 설정',
-          icon: 'pi pi-user'
+          icon: 'pi pi-user',
+          command: () => {
+            menu.value = 1;
+          }
         },
         {
           label: '이미지 폴더',

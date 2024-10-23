@@ -19,7 +19,7 @@
     <Button icon="pi pi-cloud-upload" label="자동 경매올리고 포스팅" size="small" @click="overlayAuction" />
   </div>
 
-  <div class="pt-4 text-sm">{{ updateProgress }}</div>
+  <div class="pt-4 text-xs">{{ updateProgress }}</div>
 
   <transition name="slide-left">
     <div v-if="showAuction" class="overlay">

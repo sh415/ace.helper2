@@ -11,6 +11,7 @@ import Theme from '@primevue/themes/aura';
 import Button from "primevue/button"
 import Menu from 'primevue/menu';
 import InputText from 'primevue/inputtext';
+import FloatLabel from 'primevue/floatlabel';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Tooltip from 'primevue/tooltip';
@@ -27,6 +28,7 @@ app.use(PrimeVue, {
 app.component('Button', Button);
 app.component('Menu', Menu);
 app.component('InputText', InputText);
+app.component('FloatLabel', FloatLabel);
 app.component('DataTable', DataTable);
 app.component('Column', Column);
 app.directive('tooltip', Tooltip);

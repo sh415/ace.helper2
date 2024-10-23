@@ -1,0 +1,15 @@
+{
+  "naver_id": "test",
+  "naver_pw": null,
+  "auction_id": null,
+  "auction_pw": null,
+  "folder_start": null,
+  "folder_end": null,
+  "openai_key": null,
+  "openai_use_question1": false,
+  "openai_question1":null,
+  "openai_use_question2": false,
+  "openai_question2":null,
+  "is_publish":true,
+  "quote":0
+}

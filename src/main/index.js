@@ -1,10 +1,37 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
-const { autoUpdater } = require("electron-updater");
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon2.png?asset'
 
+const { autoUpdater } = require("electron-updater");
+const fs = require('fs');
+
+const jsonFilePath = join(__dirname, '../../resources', 'settings.json'); // JSON 파일 경로
 let mainWindow = null;
+
+const initSettings = async (filePath) => {
+  if (!fs.existsSync(filePath)) {
+    console.log('create new file.', filePath);
+    fs.writeFileSync(filePath, JSON.stringify({
+      naver_id: null,
+      naver_pw: null,
+      auction_id: null,
+      auction_pw: null,
+      folder_start: null,
+      folder_end: null,
+      openai_key: null,
+      openai_use_question1: false,
+      openai_question1: null,
+      openai_use_question2: false,
+      openai_question2: null,
+      is_publish: true,
+      quote: 0,
+    }));
+
+  } else {
+    console.log('file already exsist.');
+  }
+}
 
 function createWindow() {
   // Create the browser window.
@@ -41,7 +68,11 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+
+  // DB 초기화 및 파일 생성 확인
+  await initSettings(jsonFilePath);
+
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
@@ -69,7 +100,19 @@ app.whenReady().then(() => {
     }
   });
 
+  ipcMain.handle('checkSettings', async (event, arg) => {
+    try {
+      const data = fs.readFileSync(jsonFilePath, 'utf-8');
+      const jsonData = JSON.parse(data);
+      return jsonData;
+      
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
   createWindow()
+
 
   /** 업데이트 관련 */
   autoUpdater.on("checking-for-update", () => {
