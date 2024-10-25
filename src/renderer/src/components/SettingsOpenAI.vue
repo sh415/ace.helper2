@@ -1,10 +1,19 @@
 <template>
   <div>
-    <div class="flex py-4">
+    <div class="flex pb-2">
       <FloatLabel>
         <InputText class="w-96" id="openai_key" size="small" v-model="openaiKey" @blur="handleBlur" />
         <label class="text-xs" for="openai_key">OpenAI_API_KEY</label>
       </FloatLabel>
+    </div>
+
+    <div class="flex px-2 pb-4">
+      <div v-if="isValiedKey" class="flex">
+        <div class="text-xs text-green-500">키가 유효합니다.</div>
+      </div>
+      <div v-else class="flex">
+        <div class="text-xs text-red-500">키가 유효하지 않습니다.</div>
+      </div>
     </div>
     
     <div class="flex py-4">
@@ -43,6 +52,7 @@
   import { ref, onMounted } from "vue";
   
   const openaiKey = ref();
+  const isValiedKey = ref(false);
   const openaiUseQuestion1 = ref();
   const openaiQuestion1 = ref();
   const openaiQuestion1s = ref([
@@ -57,6 +67,7 @@
 
   onMounted (async () => {
     await getData();
+    await checkApiKey();
   })
 
   const getData = async () => {
@@ -70,7 +81,23 @@
     openaiQuestion2.value = data.openai_question2;
   }
 
-  const handleBlur = (event) => {
+  const checkApiKey = async () => {
+    try {
+      const result = await window.electron.ipcRenderer.invoke('checkApiKey', openaiKey.value);
+
+      if (result) {
+        isValiedKey.value = true;
+
+      } else {
+        isValiedKey.value = false;
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleBlur = async (event) => {
     const key = event.target.id;
     if (key === 'openai_key') {
       const settings = {
@@ -78,6 +105,8 @@
         value: openaiKey.value.trim(),
       }
       window.electron.ipcRenderer.send('updateSettings', settings);
+
+      await checkApiKey();
     }
   };
 

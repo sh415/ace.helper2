@@ -19,6 +19,9 @@
     <div v-else-if="menu === 4">
       <SettingsPost />
     </div>
+    <div v-else-if="menu === 5">
+      <MenusRun />
+    </div>
   </div>
 
   <Toast />
@@ -33,6 +36,7 @@
   import SettingsFolder from "./SettingsFolder.vue";
   import SettingsOpenAI from "./SettingsOpenAI.vue";
   import SettingsPost from "./SettingsPost.vue";
+  import MenusRun from "./MenusRun.vue";
 
   const toast = useToast();
 
@@ -86,7 +90,10 @@
       items: [
         {
           label: '실행',
-          icon: 'pi pi-bolt'
+          icon: 'pi pi-bolt',
+          command: () => {
+            menu.value = 5;
+          }
         },
         {
           label: '나가기',

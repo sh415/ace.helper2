@@ -5,6 +5,7 @@ import icon from '../../resources/icon2.png?asset'
 
 const { autoUpdater } = require("electron-updater");
 const fs = require('fs');
+const axios = require('axios');
 
 const jsonFilePath = join(__dirname, '../../resources', 'settings.json'); // JSON 파일 경로
 let mainWindow = null;
@@ -43,7 +44,8 @@ function createWindow() {
     icon: icon, // ...(process.platform === 'linux' ? { icon } : { }),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      webviewTag: true,
     }
   })
 
@@ -92,7 +94,6 @@ app.whenReady().then(async () => {
 
   ipcMain.on('checkUpdate', async (event, params) => {
     try {
-      console.log('checkUpdate');
       autoUpdater.checkForUpdates(); // 업데이트 확인 시작, 개발 모드에서는 확인할 수 없음.
       
     } catch (error) {
@@ -159,6 +160,20 @@ app.whenReady().then(async () => {
         mainWindow.webContents.send("updateResult", key);
       } 
 
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  ipcMain.handle('checkApiKey', async (event, params) => {
+    try {
+      const response = await axios.get('https://api.openai.com/v1/models', {
+        headers: {
+          'Authorization': `Bearer ${params}`,
+        },
+      });
+      return response.data;
+      
     } catch (error) {
       console.log(error);
     }
