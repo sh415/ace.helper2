@@ -1,15 +1,15 @@
 {
-  "naver_id": "test",
-  "naver_pw": null,
-  "auction_id": null,
-  "auction_pw": null,
-  "folder_start": null,
-  "folder_end": null,
-  "openai_key": null,
+  "naver_id": "auctionup",
+  "naver_pw": "ksw140718",
+  "auction_id": "eung3",
+  "auction_pw": "123456",
+  "folder_start": "C:\\Users\\apxkf\\OneDrive\\바탕 화면\\블로그시작",
+  "folder_end": "C:\\Users\\apxkf\\OneDrive\\바탕 화면\\블로그마무리",
+  "openai_key": "",
   "openai_use_question1": false,
-  "openai_question1":null,
+  "openai_question1": 0,
   "openai_use_question2": false,
-  "openai_question2":null,
-  "is_publish":true,
-  "quote":0
+  "openai_question2": null,
+  "is_publish": true,
+  "quote": 0
 }

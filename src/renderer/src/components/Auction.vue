@@ -5,15 +5,36 @@
 
   <div class="flex-grow flex justify-center items-center">
     <div v-if="menu === 0">
-      <SettingsNaver></SettingsNaver>
+      <SettingsNaver />
+    </div>
+    <div v-else-if="menu === 1">
+      <SettingsAuction />
+    </div>
+    <div v-else-if="menu === 2">
+      <SettingsFolder />
+    </div>
+    <div v-else-if="menu === 3">
+      <SettingsOpenAI />
+    </div>
+    <div v-else-if="menu === 4">
+      <SettingsPost />
     </div>
   </div>
+
+  <Toast />
 
 </template>
   
 <script setup>
   import { ref, onMounted } from "vue";
+  import { useToast } from 'primevue/usetoast';
   import SettingsNaver from "./SettingsNaver.vue";
+  import SettingsAuction from "./SettingsAuction.vue";
+  import SettingsFolder from "./SettingsFolder.vue";
+  import SettingsOpenAI from "./SettingsOpenAI.vue";
+  import SettingsPost from "./SettingsPost.vue";
+
+  const toast = useToast();
 
   // emit 정의
   const emit = defineEmits(['close']);
@@ -39,11 +60,24 @@
         },
         {
           label: '이미지 폴더',
-          icon: 'pi pi-folder-open'
+          icon: 'pi pi-folder-open',
+          command: () => {
+            menu.value = 2;
+          }
         },
         {
-          label: 'OpenAI 옵션',
-          icon: 'pi pi-cog'
+          label: 'OpenAI 설정',
+          icon: 'pi pi-cog',
+          command: () => {
+            menu.value = 3;
+          }
+        },
+        {
+          label: '포스팅 설정',
+          icon: 'pi pi-cog',
+          command: () => {
+            menu.value = 4;
+          }
         },
       ]
     },
@@ -64,6 +98,11 @@
       ]
     },
   ]);
+
+  window.electron.ipcRenderer.on('updateResult', async (event, res) => {
+    const message = `${res} 수정했습니다.`;
+    toast.add({ severity: 'info', summary: '수정됨', detail: message, life: 3000 });
+  });
 
 </script>
 

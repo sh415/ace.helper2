@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon2.png?asset'
@@ -21,7 +21,7 @@ const initSettings = async (filePath) => {
       folder_end: null,
       openai_key: null,
       openai_use_question1: false,
-      openai_question1: null,
+      openai_question1: 0,
       openai_use_question2: false,
       openai_question2: null,
       is_publish: true,
@@ -90,7 +90,7 @@ app.whenReady().then(async () => {
     return app.getVersion();
   });
 
-  ipcMain.on('checkUpdate', async (event, arg) => {
+  ipcMain.on('checkUpdate', async (event, params) => {
     try {
       console.log('checkUpdate');
       autoUpdater.checkForUpdates(); // 업데이트 확인 시작, 개발 모드에서는 확인할 수 없음.
@@ -100,7 +100,7 @@ app.whenReady().then(async () => {
     }
   });
 
-  ipcMain.handle('checkSettings', async (event, arg) => {
+  ipcMain.handle('checkSettings', async (event, params) => {
     try {
       const data = fs.readFileSync(jsonFilePath, 'utf-8');
       const jsonData = JSON.parse(data);
@@ -110,6 +110,79 @@ app.whenReady().then(async () => {
       console.log(error);
     }
   });
+
+  ipcMain.on('updateSettings', async (event, params) => {
+    const { key, value } = params;
+
+    try {
+      // 1. 현재 설정 로드
+      const settings = await loadSettings();
+
+      // 2. 설정 업데이트
+      settings[key] = value;
+
+      // 3. 업데이트된 설정 저장
+      await saveSettings(settings);
+
+      mainWindow.webContents.send("updateResult", key);
+      
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  ipcMain.on('updateSettingsFolder', async (event, params) => {
+    const { key, value } = params;
+
+    try {
+      const result = await dialog.showOpenDialog(mainWindow, {
+        properties: ['openDirectory'], // 디렉토리 선택
+      });
+
+      if (!result.canceled) {
+        const folderPath = result.filePaths[0];
+
+        // 1. 현재 설정 로드
+        const settings = await loadSettings();
+
+        // 2. 설정 업데이트
+        settings[key] = folderPath;
+
+        // 3. 업데이트된 설정 저장
+        await saveSettings(settings);
+
+        const res = {
+          key: key,
+          path: folderPath,
+        }
+        event.sender.send('updateResultFolder', res);
+        mainWindow.webContents.send("updateResult", key);
+      } 
+
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  const loadSettings = async () => { // 기존 설정을 로드하는 함수
+    try {
+      const data = fs.readFileSync(jsonFilePath, 'utf-8');
+      return JSON.parse(data);
+
+    } catch (error) {
+      console.error('Error loading settings:', error);
+      return {}; 
+    }
+  };
+
+  const saveSettings = async (settings) => { // 설정을 저장하는 함수
+    try {
+      fs.writeFileSync(jsonFilePath, JSON.stringify(settings, null, 2), 'utf-8');
+
+    } catch (error) {
+      console.error('Error saving settings:', error);
+    }
+  };
 
   createWindow()
 

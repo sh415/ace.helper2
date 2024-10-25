@@ -14,6 +14,11 @@ import InputText from 'primevue/inputtext';
 import FloatLabel from 'primevue/floatlabel';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import Select from 'primevue/select';
+import Toast from 'primevue/toast';
+import ToastService from 'primevue/toastservice';
+import ToggleSwitch from 'primevue/toggleswitch';
+import Textarea from 'primevue/textarea';
 import Tooltip from 'primevue/tooltip';
 
 /** 애플리케이션 인스턴스 생성 */
@@ -25,12 +30,17 @@ app.use(PrimeVue, {
     preset: Theme
   }
 });
+app.use(ToastService);
 app.component('Button', Button);
 app.component('Menu', Menu);
 app.component('InputText', InputText);
 app.component('FloatLabel', FloatLabel);
 app.component('DataTable', DataTable);
 app.component('Column', Column);
+app.component('Select', Select);
+app.component('Toast', Toast);
+app.component('ToggleSwitch', ToggleSwitch);
+app.component('Textarea', Textarea);
 app.directive('tooltip', Tooltip);
 
 app.mount('#app')
