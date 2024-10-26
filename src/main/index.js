@@ -11,6 +11,7 @@ const axios = require('axios');
 
 const jsonFilePath = join(__dirname, '../../resources', 'settings.json'); // JSON 파일 경로
 let mainWindow = null;
+let fastApiProcess;
 
 const initSettings = async (filePath) => {
   if (!fs.existsSync(filePath)) {
@@ -187,7 +188,7 @@ app.whenReady().then(async () => {
       const appScript = path.join(__dirname, "../../resources", "venv", "app.py");
 
       // 가상환경 활성화 및 app.py 실행
-      exec(`call "${activateScript}" && python "${appScript}"`, (error, stdout, stderr) => {
+      fastApiProcess = exec(`call "${activateScript}" && python "${appScript}"`, (error, stdout, stderr) => {
         if (error) {
           console.error(`Error executing script: ${error.message}`);
           return;
@@ -200,11 +201,12 @@ app.whenReady().then(async () => {
       });
 
       return true;
-      
+
     } catch (error) {
       console.log(error);
     }
   });
+
 
   const loadSettings = async () => { // 기존 설정을 로드하는 함수
     try {
@@ -293,10 +295,23 @@ app.whenReady().then(async () => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
+  if (fastApiProcess) {
+    shutdown();
+  }
+
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
+
+const shutdown = async () => {
+  try {
+    await axios.post('http://127.0.0.1:5816/shutdown', {});
+    
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
