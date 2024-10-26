@@ -9,11 +9,13 @@ import App from './App.vue'
 import PrimeVue from 'primevue/config';
 import Theme from '@primevue/themes/aura';
 import Button from "primevue/button"
-import Menu from 'primevue/menu';
-import InputText from 'primevue/inputtext';
-import FloatLabel from 'primevue/floatlabel';
-import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import DataTable from 'primevue/datatable';
+import DataView from 'primevue/dataview';
+import FloatLabel from 'primevue/floatlabel';
+import InputText from 'primevue/inputtext';
+import Menu from 'primevue/menu';
+import ProgressSpinner from 'primevue/progressspinner';
 import Select from 'primevue/select';
 import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
@@ -32,11 +34,13 @@ app.use(PrimeVue, {
 });
 app.use(ToastService);
 app.component('Button', Button);
-app.component('Menu', Menu);
-app.component('InputText', InputText);
-app.component('FloatLabel', FloatLabel);
-app.component('DataTable', DataTable);
 app.component('Column', Column);
+app.component('DataTable', DataTable);
+app.component('DataView', DataView);
+app.component('FloatLabel', FloatLabel);
+app.component('InputText', InputText);
+app.component('Menu', Menu);
+app.component('ProgressSpinner', ProgressSpinner);
 app.component('Select', Select);
 app.component('Toast', Toast);
 app.component('ToggleSwitch', ToggleSwitch);

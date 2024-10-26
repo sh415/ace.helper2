@@ -8,7 +8,17 @@
     </div>
 
     <div class="flex px-2 pb-4">
-      <div v-if="isValiedKey" class="flex">
+      <div v-if="openaiChecking">
+        <ProgressSpinner 
+          style="width: 20px; 
+          height: 20px" 
+          strokeWidth="8" 
+          fill="transparent" 
+          animationDuration="2.5s" 
+          aria-label="Custom ProgressSpinner" 
+        />
+      </div>
+      <div v-else-if="isValiedKey" class="flex">
         <div class="text-xs text-green-500">키가 유효합니다.</div>
       </div>
       <div v-else class="flex">
@@ -53,6 +63,7 @@
   
   const openaiKey = ref();
   const isValiedKey = ref(false);
+  const openaiChecking = ref(true);
   const openaiUseQuestion1 = ref();
   const openaiQuestion1 = ref();
   const openaiQuestion1s = ref([
@@ -94,6 +105,10 @@
 
     } catch (error) {
       console.log(error);
+      isValiedKey.value = false;
+      
+    } finally {
+      openaiChecking.value = false;
     }
   }
 
