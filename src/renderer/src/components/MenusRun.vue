@@ -42,7 +42,7 @@
     <div v-if="isTriggerRun" class="flex justify-center">
       <webview 
         is="webview" 
-        src="https://www.naver.com/" 
+        src="http://127.0.0.1:5816" 
         style="width: 500px; height: 400px;"
         frameborder="0"
       ></webview>
@@ -85,7 +85,7 @@
   }
 
   const triggerRun = async () => {
-
+    const result = await window.electron.ipcRenderer.invoke('triggerRun');
   }
 
 

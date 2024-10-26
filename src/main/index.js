@@ -4,7 +4,9 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon2.png?asset'
 
 const { autoUpdater } = require("electron-updater");
+const { exec } = require("child_process");
 const fs = require('fs');
+const path = require("path");
 const axios = require('axios');
 
 const jsonFilePath = join(__dirname, '../../resources', 'settings.json'); // JSON 파일 경로
@@ -173,6 +175,31 @@ app.whenReady().then(async () => {
         },
       });
       return response.data;
+      
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  ipcMain.handle('triggerRun', async (event, params) => {
+    try {
+      const activateScript = path.join(__dirname, "../../resources", "venv", "Scripts", "activate.bat");
+      const appScript = path.join(__dirname, "../../resources", "venv", "app.py");
+
+      // 가상환경 활성화 및 app.py 실행
+      exec(`call "${activateScript}" && python "${appScript}"`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error executing script: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.error(`stderr: ${stderr}`);
+          return;
+        }
+        console.log(`stdout: ${stdout}`);
+      });
+
+      return true;
       
     } catch (error) {
       console.log(error);
