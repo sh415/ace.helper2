@@ -4,4 +4,4 @@ out
 .DS_Store
 *.log*
 resources/settings.json
-resources/venv
+resources/app.exe

@@ -25,17 +25,12 @@ https://github.com/alex8088/electron-vite-boilerplate
 
 ---------------------------------------------------------------------------------------------------------------------------------------
 
-1. python -m venv venv
+1. 패키지 설치 : pip install -r requirements.txt
 
-2. 가상 환경 활성화 : cd [activate.bat 파일 경로로 이동] > activate
+2. 빌드
+- pyinstaller --onefile app.py
+- pyinstaller --noconsole app.py
+- pyinstaller --add-data "assets:assets" app.py
+- pyinstaller --add-data "data.txt;." app.py
 
-3. 버전 확인: python --version
-
-4. venv 경로로 이동
-
-5. 패키지 설치 : pip install -r requirements.txt
-
-6. 실행 :  cd [.py 파일 경로로 이동] > python app.py
-
-7. 가상 환경 비활성화 : deactivate
 

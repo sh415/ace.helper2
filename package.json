@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "description": "An Electron application with Vue",
   "main": "./out/main/index.js",
-  "author": "example.com",
+  "author": "Ace Auction",
   "homepage": "https://electron-vite.org",
   "scripts": {
     "format": "prettier --write .",

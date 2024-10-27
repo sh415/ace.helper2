@@ -4,7 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon2.png?asset'
 
 const { autoUpdater } = require("electron-updater");
-const { exec } = require("child_process");
+const { execFile } = require("child_process");
 const fs = require('fs');
 const path = require("path");
 const axios = require('axios');
@@ -182,28 +182,64 @@ app.whenReady().then(async () => {
     }
   });
 
-  ipcMain.handle('triggerRun', async (event, params) => {
+  ipcMain.handle('checkConnection', async (event, params) => {
     try {
-      const activateScript = path.join(__dirname, "../../resources", "venv", "Scripts", "activate.bat");
-      const appScript = path.join(__dirname, "../../resources", "venv", "app.py");
+      const response = await axios.get('http://127.0.0.1:5816');
+      return response.data.result;
+      
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  });
 
-      // 가상환경 활성화 및 app.py 실행
-      fastApiProcess = exec(`call "${activateScript}" && python "${appScript}"`, (error, stdout, stderr) => {
+  ipcMain.handle('triggerServer', async (event, params) => {
+    try {
+      const programPath = join(__dirname, "../../resources", "app.exe");
+      execFile(programPath, (error, stdout, stderr) => {
         if (error) {
-          console.error(`Error executing script: ${error.message}`);
-          return;
-        }
-        if (stderr) {
-          console.error(`stderr: ${stderr}`);
-          return;
+          console.error(`Error executing file: ${error}`);
+          return {
+            result: false,
+            message: error,
+          };
         }
         console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
       });
 
-      return true;
+      fastApiProcess = true;
+      return {
+        result: true,
+        message: 'success',
+      };
 
     } catch (error) {
       console.log(error);
+      return {
+        result: true,
+        message: error,
+      }
+    }
+  });
+
+  ipcMain.handle('triggerMessage', async (event, params) => {
+    try {
+      const response = await axios.post('http://127.0.0.1:5816/message', {});
+      return response.data;
+      
+    } catch (error) {
+      return false;
+    }
+  });
+
+  ipcMain.handle('triggerStart', async (event, params) => {
+    try {
+      const response = await axios.post('http://127.0.0.1:5816/start', {});
+      return response.data;
+      
+    } catch (error) {
+      return false;
     }
   });
 
