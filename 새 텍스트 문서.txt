@@ -22,15 +22,3 @@ https://github.com/alex8088/electron-vite-boilerplate
 6. 업데이트
 - 최신 Releases 를 체크하므로 draft 항목을 Publish releases 해야 함
 - 현재는 public 으로 릴리즈 한다. 배포가지 가능하지만 업데이트시 token 정보가 어디에 위치하여야 하는지 파악해야 함.
-
----------------------------------------------------------------------------------------------------------------------------------------
-
-1. 패키지 설치 : pip install -r requirements.txt
-
-2. 빌드
-- pyinstaller --onefile app.py
-- pyinstaller --noconsole app.py
-- pyinstaller --add-data "assets:assets" app.py
-- pyinstaller --add-data "data.txt;." app.py
-
-

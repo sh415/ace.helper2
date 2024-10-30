@@ -14,9 +14,12 @@
       <a target="_blank" rel="noreferrer" @click="ipcHandle">Send IPC</a>
     </div> -->
 
-    <!-- <Button v-if="enableAuction" icon="pi pi-cloud-upload" label="자동 경매올리고 포스팅" size="small" @click="overlayAuction" />
-    <Button v-else icon="pi pi-spin pi-spinner" label="자동 경매올리고 포스팅" size="small" @click="" disabled /> -->
-    <Button icon="pi pi-cloud-upload" label="자동 경매올리고 포스팅" size="small" @click="overlayAuction" />
+    <!-- 1. 빌드 환경 -->
+    <Button v-if="enableAuction" icon="pi pi-cloud-upload" label="자동 경매올리고 포스팅" size="small" @click="overlayAuction" />
+    <Button v-else icon="pi pi-spin pi-spinner" label="자동 경매올리고 포스팅" size="small" @click="" disabled />
+
+    <!-- 2. 개발 환경 -->
+    <!-- <Button icon="pi pi-cloud-upload" label="자동 경매올리고 포스팅" size="small" @click="overlayAuction" /> -->
   </div>
 
   <div class="pt-4 text-xs">{{ updateProgress }}</div>
@@ -69,6 +72,7 @@
   }
 
   const ipcHandle = () => window.electron.ipcRenderer.send('ping')
+
 
   // 지연시간 추가 setTimeOut 대체
   const waitForTimeout = (ms) => {

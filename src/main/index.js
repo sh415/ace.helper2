@@ -9,33 +9,9 @@ const fs = require('fs');
 const path = require("path");
 const axios = require('axios');
 
-const jsonFilePath = join(__dirname, '../../resources', 'settings.json'); // JSON 파일 경로
+const jsonFilePath = path.join(__dirname, '../../resources', 'settings.json'); // JSON 파일 경로
 let mainWindow = null;
 let fastApiProcess;
-
-const initSettings = async (filePath) => {
-  if (!fs.existsSync(filePath)) {
-    console.log('create new file.', filePath);
-    fs.writeFileSync(filePath, JSON.stringify({
-      naver_id: null,
-      naver_pw: null,
-      auction_id: null,
-      auction_pw: null,
-      folder_start: null,
-      folder_end: null,
-      openai_key: null,
-      openai_use_question1: false,
-      openai_question1: 0,
-      openai_use_question2: false,
-      openai_question2: null,
-      is_publish: true,
-      quote: 0,
-    }));
-
-  } else {
-    console.log('file already exsist.');
-  }
-}
 
 function createWindow() {
   // Create the browser window.
@@ -74,10 +50,6 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
-
-  // DB 초기화 및 파일 생성 확인
-  await initSettings(jsonFilePath);
-
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
@@ -195,7 +167,7 @@ app.whenReady().then(async () => {
 
   ipcMain.handle('triggerServer', async (event, params) => {
     try {
-      const programPath = join(__dirname, "../../resources", "app.exe");
+      const programPath = path.join(__dirname, "../../resources", "app.exe");
       execFile(programPath, (error, stdout, stderr) => {
         if (error) {
           console.error(`Error executing file: ${error}`);
@@ -255,9 +227,15 @@ app.whenReady().then(async () => {
     }
   };
 
-  const saveSettings = async (settings) => { // 설정을 저장하는 함수
+  const saveSettings = async (settings) => { // 설정을 저장하는 함수,빌드 환경에서 app.asar에 쓰기 권한 없음.
     try {
-      fs.writeFileSync(jsonFilePath, JSON.stringify(settings, null, 2), 'utf-8');
+      if (jsonFilePath.includes('app.asar')) {
+        const asarPath = jsonFilePath.replace('app.asar', 'app.asar.unpacked');
+        fs.writeFileSync(asarPath, JSON.stringify(settings, null, 2), 'utf-8');
+      } else {
+        fs.writeFileSync(jsonFilePath, JSON.stringify(settings, null, 2), 'utf-8');
+      }
+
 
     } catch (error) {
       console.error('Error saving settings:', error);

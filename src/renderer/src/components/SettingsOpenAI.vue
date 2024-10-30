@@ -39,6 +39,13 @@
       </FloatLabel>
     </div>
 
+    <div clas="flex py-4">
+      <FloatLabel>
+        <Textarea class="w-96" id="openai_question1_plus" v-model="openaiQuestion1Plus" rows="3" cols="30" style="resize: none" @blur="handleBlur" />
+        <label class="text-xs" for="openai_question1_plus">AI 포스팅1 에 사용할 질문을 적어보세요.</label>
+      </FloatLabel>
+    </div>
+
     <div class="py-2"></div>
 
     <div class="flex py-4">
@@ -50,7 +57,7 @@
 
     <div clas="flex py-4">
       <FloatLabel>
-        <Textarea class="w-96" id="openai_question2" v-model="openaiQuestion2" rows="5" cols="30" style="resize: none" />
+        <Textarea class="w-96" id="openai_question2" v-model="openaiQuestion2" rows="4" cols="30" style="resize: none" @blur="handleBlur" />
         <label class="text-xs" for="openai_question2">AI 포스팅2 에 사용할 질문을 적어보세요.</label>
       </FloatLabel>
     </div>
@@ -66,6 +73,7 @@
   const openaiChecking = ref(true);
   const openaiUseQuestion1 = ref();
   const openaiQuestion1 = ref();
+  const openaiQuestion1Plus = ref();
   const openaiQuestion1s = ref([
     { name: '무작위', code: 0 },
     { name: '본문1', code: 1 },
@@ -88,6 +96,7 @@
     openaiKey.value = data.openai_key;
     openaiUseQuestion1.value = data.openai_use_question1;
     openaiQuestion1.value =  openaiQuestion1s.value.find(item => item.code === data.openai_question1);
+    openaiQuestion1Plus.value = data.openai_question1_plus;
     openaiUseQuestion2.value = data.openai_use_question2;
     openaiQuestion2.value = data.openai_question2;
   }
@@ -122,6 +131,20 @@
       window.electron.ipcRenderer.send('updateSettings', settings);
 
       await checkApiKey();
+
+    } else if (key=== 'openai_question1_plus') {
+      const settings = {
+        key: key,
+        value: openaiQuestion1Plus.value.trim(),
+      }
+      window.electron.ipcRenderer.send('updateSettings', settings);
+
+    } else if (key === 'openai_question2') {
+      const settings = {
+        key: key,
+        value: openaiQuestion2.value.trim(),
+      }
+      window.electron.ipcRenderer.send('updateSettings', settings);
     }
   };
 
