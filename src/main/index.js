@@ -215,6 +215,15 @@ app.whenReady().then(async () => {
     }
   });
 
+  ipcMain.handle('troubleShooting', async (event, params) => {
+    try {
+      await axios.post('http://127.0.0.1:5816/shutdown', {});
+      
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
 
   const loadSettings = async () => { // 기존 설정을 로드하는 함수
     try {

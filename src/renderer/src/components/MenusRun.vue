@@ -5,7 +5,7 @@
 
     <!-- 버튼 영역 -->
     <div class="py-4 flex justify-center">
-      <Button v-if="isTriggerRun"
+      <Button v-if="isTriggerRun === true"
         icon="pi pi-bolt" 
         label="프로그램 실행" 
         size="small" 
@@ -15,7 +15,7 @@
       />
       <Button v-else
         icon="pi pi-bolt" 
-        label="아직 실행할 수 없습니다." 
+        label="프로그램 실행중" 
         size="small" 
         severity="contrast" 
         aria-label="Star" 
@@ -47,10 +47,6 @@
         style="width: 500px; height: 400px;"
         frameborder="0"
       ></webview> -->
-      <i class="pi pi-check-circle" style="color: green"></i>
-    </div>
-    <div v-else class="flex justify-center">
-      <i class="pi pi-server" style="color: #708090"></i>
     </div>
   </div>
 
@@ -60,11 +56,19 @@
   import { ref, onMounted } from "vue";
 
   const isTriggerRun = ref(false);
+  const isTriggerLock = ref(false);
   const message = ref();
   const connection = ref(false);
   
   onMounted (async () => {
     await getData();
+
+    // 이후 주기적으로 실행 현황 체크
+    setInterval(async () => {
+      console.log('setInterval() -> triggerMessage()')
+      await triggerMessage();
+        
+    }, 1000);
   })
 
   const getData = async () => {
@@ -91,23 +95,25 @@
     const result = await checkConnection();
     if (result) {
       connection.value = true;
-      message.value = `서버가 연결되었습니다.`;
+      message.value = `프로그램이 연결되었습니다.`;
 
     } else {
-      message.value = `서버가 연결되지 않았습니다. 서버를 시작합니다.`;
+      message.value = `프로그램이 연결되지 않았습니다. 프로그램을 시작합니다.`;
       await waitForTimeout(1000);
       await triggerServer();
     }
 
     // 3. 실행중인 작업 존재 여부 검사
     if (connection) {
+      message.value = `진행중인 작업이 있는지 확인중.`;
+      await waitForTimeout(1000);
       await triggerMessage();
     }
   }
 
   const checkConnection = async () => {
     try {
-      message.value = `서버 확인중.`;
+      message.value = `프로그램 연결 확인중.`;
       await waitForTimeout(1000);
 
       const result = await window.electron.ipcRenderer.invoke('checkConnection');  
@@ -119,12 +125,12 @@
   }
 
   const triggerServer = async () => {
-    message.value = `서버 실행중.`;
+    message.value = `프로그램 실행중.`;
     const result = await window.electron.ipcRenderer.invoke('triggerServer');
     console.log(result);
     if (result.result) {
       connection.value = true;
-      message.value = `서버가 연결되었습니다.`;
+      message.value = `프로그램 실행 가능합니다.`;
 
     } else {
       connection.value = false;
@@ -133,8 +139,6 @@
   }
 
   const triggerMessage = async () => {
-    message.value = `진행중인 작업이 있는지 확인중.`;
-    await waitForTimeout(1000);
     const result = await window.electron.ipcRenderer.invoke('triggerMessage');
 
     if (!result.status) {
@@ -143,16 +147,16 @@
 
     } else {
       isTriggerRun.value = false;
-      message.value = result.status.message;
+      message.value = result.message;
+
+      console.log(result)
+
     }
   }
 
   const triggerStart = async () => {
     isTriggerRun.value = false;
-    message.value = `작업 실행`;
-    await waitForTimeout(1000);
-
-    const result = await window.electron.ipcRenderer.invoke('triggerStart');
+    await window.electron.ipcRenderer.invoke('triggerStart');
   }
 
 

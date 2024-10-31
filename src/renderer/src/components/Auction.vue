@@ -22,6 +22,9 @@
     <div v-else-if="menu === 5">
       <MenusRun />
     </div>
+    <div v-else-if="menu === 6">
+      <TroubleShooting />
+    </div>
   </div>
 
   <Toast />
@@ -37,6 +40,7 @@
   import SettingsOpenAI from "./SettingsOpenAI.vue";
   import SettingsPost from "./SettingsPost.vue";
   import MenusRun from "./MenusRun.vue";
+  import TroubleShooting from "./TroubleShooting.vue";
 
   const toast = useToast();
 
@@ -93,6 +97,13 @@
           icon: 'pi pi-bolt',
           command: () => {
             menu.value = 5;
+          }
+        },
+        {
+          label: '문제 해결',
+          icon: 'pi pi-wrench',
+          command: () => {
+            menu.value = 6;
           }
         },
         {
